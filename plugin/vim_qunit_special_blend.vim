@@ -12,8 +12,6 @@ python << endOfPython
 import vim_qunit_special_blend as sb
 def command_to_run_tests():
     if int(vim.eval('exists("g:special_blend_run")')) != 0:
-        print("Ok this is still passing")
-        print("The eval: {}".format(vim.eval('exists("g:special_blend_run")')))
         return vim.eval("g:special_blend_run")
     else:
         return "grunt test"
