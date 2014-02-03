@@ -40,11 +40,10 @@ have the files array configured as follows:
 
 ``` javascript
   files: [
-    /* App files here */
-    'your/app/js/*.js',
     /* The special blend */
     'node_modules/qunit-special-blend/qunit-special-blend.js',
-    /* Test files */
+    /* App and test files here */
+    'your/app/js/*.js',
     'your/tests/*.js',
     /* Run the special blend */
     'node_modules/qunit-special-blend/run-qunit-special-blend.js'
