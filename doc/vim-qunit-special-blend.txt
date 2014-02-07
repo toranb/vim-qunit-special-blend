@@ -14,7 +14,7 @@ Ever want to run a single qunit test from your test suite with karma?
 Yeah, so did I.
 
 This plugin was created to leverage the functionality provided by the
-`quint-special-blend` npm package to run QUnit tests from within Vim. With this
+`karma-quint-special-blend` npm package to run QUnit tests from within Vim. With this
 plugin you will be able to run all of your tests, a single test module, and
 even an individual test.
 
@@ -22,18 +22,10 @@ even an individual test.
 
 This plugin assumes that you are running your JavaScript tests with karma.
 You will need to `npm install qunit-special-blend`. Then in your projects
-`karma.conf.js` have the files array configured as follows:
+`karma.conf.js` have the frameworks array configured as follows:
 
 ``` javascript
-  files: [
-    /* The special blend */
-    'node_modules/qunit-special-blend/qunit-special-blend.js',
-    /* App and test files here */
-    'your/app/js/*.js',
-    'your/tests/*.js',
-    /* Run the special blend */
-    'node_modules/qunit-special-blend/run-qunit-special-blend.js'
-  ],
+  frameworks: ['qunit', 'qunit-sb'],
 ```
 
 3. Usage                                        *vim-qunit-special-blend-usage*
