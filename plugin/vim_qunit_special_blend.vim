@@ -9,6 +9,7 @@ python sys.path.append(vim.eval('expand("<sfile>:h")'))
 "  Function(s)
 " --------------------------------
 python << endOfPython
+import os
 import vim_qunit_special_blend as sb
 def command_to_run_tests():
     if int(vim.eval('exists("g:special_blend_run")')) != 0:
@@ -23,9 +24,13 @@ python << endOfPython
 current_line_index = vim.current.window.cursor[0]
 current_module_line_num = sb.get_line_num_of_current_module(current_line_index, vim.current.buffer)
 if current_module_line_num >= 0:
+    vim.command(':wundo /tmp/oldUndo')
     vim.current.buffer[current_module_line_num] = sb.sub_current_module_with_singleModule(current_module_line_num, vim.current.buffer)
     vim.command(':!{}'.format(command_to_run_tests()))
     vim.current.buffer[current_module_line_num] = sb.sub_singleModule_with_module(current_module_line_num, vim.current.buffer)
+    if os.path.isfile('/tmp/oldUndo'):
+        vim.command('silent rundo /tmp/oldUndo')
+        os.remove('/tmp/oldUndo')
     vim.command('silent wall')
 else:
     print("This doesn't look like a QUnit test file.")
@@ -39,9 +44,13 @@ python << endOfPython
 current_line_index = vim.current.window.cursor[0]
 current_test_line_num = sb.get_line_num_of_current_test(current_line_index, vim.current.buffer)
 if current_test_line_num >= 0:
+    vim.command(':wundo /tmp/oldUndo')
     vim.current.buffer[current_test_line_num] = sb.sub_current_test_with_singleTest(current_test_line_num, vim.current.buffer)
     vim.command(':!{}'.format(command_to_run_tests()))
     vim.current.buffer[current_test_line_num] = sb.sub_singleTest_with_test(current_test_line_num, vim.current.buffer)
+    if os.path.isfile('/tmp/oldUndo'):
+        vim.command('silent rundo /tmp/oldUndo')
+        os.remove('/tmp/oldUndo')
     vim.command('silent wall')
 else:
     print("This doesn't look like a QUnit test file.")
