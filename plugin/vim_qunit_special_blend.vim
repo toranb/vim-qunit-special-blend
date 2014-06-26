@@ -18,15 +18,16 @@ def command_to_run_tests():
         return "grunt test"
 endOfPython
 
-function! RunSingleModule()
+function! RunSingleModule(command)
 python << endOfPython
 
+command_to_run = vim.eval("a:command")
 current_line_index = vim.current.window.cursor[0]
 current_module_line_num = sb.get_line_num_of_current_module(current_line_index, vim.current.buffer)
 if current_module_line_num >= 0:
     vim.command(':wundo /tmp/oldUndo')
     vim.current.buffer[current_module_line_num] = sb.sub_current_module_with_singleModule(current_module_line_num, vim.current.buffer)
-    vim.command(':!{}'.format(command_to_run_tests()))
+    vim.command(':!{}'.format(command_to_run))
     vim.current.buffer[current_module_line_num] = sb.sub_singleModule_with_module(current_module_line_num, vim.current.buffer)
     if os.path.isfile('/tmp/oldUndo'):
         vim.command('silent rundo /tmp/oldUndo')
@@ -38,15 +39,16 @@ else:
 endOfPython
 endfunction
 
-function! RunSingleTest()
+function! RunSingleTest(command)
 python << endOfPython
 
+command_to_run = vim.eval("a:command")
 current_line_index = vim.current.window.cursor[0]
 current_test_line_num = sb.get_line_num_of_current_test(current_line_index, vim.current.buffer)
 if current_test_line_num >= 0:
     vim.command(':wundo /tmp/oldUndo')
     vim.current.buffer[current_test_line_num] = sb.sub_current_test_with_singleTest(current_test_line_num, vim.current.buffer)
-    vim.command(':!{}'.format(command_to_run_tests()))
+    vim.command(':!{}'.format(command_to_run))
     vim.current.buffer[current_test_line_num] = sb.sub_singleTest_with_test(current_test_line_num, vim.current.buffer)
     if os.path.isfile('/tmp/oldUndo'):
         vim.command('silent rundo /tmp/oldUndo')
@@ -58,10 +60,11 @@ else:
 endOfPython
 endfunction
 
-function! RunAllTests()
+function! RunAllTests(command)
 python << endOfPython
 
-vim.command(':!{}'.format(command_to_run_tests()))
+command_to_run = vim.eval("a:command")
+vim.command(':!{}'.format(command_to_run))
 
 endOfPython
 endfunction
@@ -69,6 +72,6 @@ endfunction
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
-command! RunSingleQunitModule call RunSingleModule()
-command! RunSingleQunitTest call RunSingleTest()
-command! RunAllQunitTests call RunAllTests()
+command! -nargs=1 RunSingleQunitModule call RunSingleModule(<f-args>)
+command! -nargs=1 RunSingleQunitTest call RunSingleTest(<f-args>)
+command! -nargs=1 RunAllQunitTests call RunAllTests(<f-args>)
